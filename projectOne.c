@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 #define LETTERCOUNT 26
 
@@ -7,6 +8,7 @@ void readFreq(float given[], char fname[]);
 void calcFreq(float found[], char fname[]);
 char rotate(char ch, int num);
 int findKey(float given[], float found[]);
+void decrypt(int key, char fname[]);
 
 int main(){
 
@@ -17,14 +19,17 @@ int main(){
 	for(int i = 0; i<LETTERCOUNT; i++)
 		printf("%lf\n", given[i]);
 
-	calcFreq(found, "testparagraphenc.txt");
+	calcFreq(found, "pagecrypt.txt");
 
 	for(int i = 0; i<LETTERCOUNT; i++)
 		printf("%f\n", found[i]);	
 	
 	int key = findKey(given, found);	
 
-	printf("Key is: %d", key);
+	printf("Key is: %d\n", key);
+
+	decrypt(key, "pagecrypt.txt");
+
 	return(0);
 }
 
@@ -53,12 +58,10 @@ void calcFreq(float found[], char fname[]){
 	float total = 0;
 	while(current != EOF){
 		if(isalpha(current)){
-			printf("%c\n", current);
 			current = tolower(current);
-			printf("After lower %d\n", current-97);
 			found[current-97] = found[current-97] + 1;
+			total++;
 		}
-		total++;
 		current = fgetc(fp);	
 	}
 	for(int i = 0; i<LETTERCOUNT; i++){
@@ -71,9 +74,12 @@ void calcFreq(float found[], char fname[]){
 //positions as given in parameter num and return the resulting character.
 char rotate(char ch, int num){
 
-	if((ch+num)-97 > 26)
-		return ((ch+num)-26);
-	return ch+num;
+	int temp = (int)ch;
+	if((temp+num) > 122)
+		return (char)((temp+num) - 26);
+	return (char)(temp+num);
+
+
 }
 
 //Compare the data in array found with thre frequency data in array given, looking 
@@ -106,8 +112,19 @@ int findKey(float given[], float found[]){
 
 void decrypt(int key, char fname[]){
 
-		
-
-
-
+	FILE* efp, *dfp;		
+	efp = fopen(fname, "r");
+	dfp = fopen("decrpytfile", "w");
+	char current = fgetc(efp);
+	while(current!=EOF){
+		if(isalpha(current)){
+			current = tolower(current);
+			current = rotate(current, 26-key);
+		}
+		fputc(current, dfp);
+		current = fgetc(efp);
+	}			
+	fclose(efp);
+	fclose(dfp);
+	
 }
