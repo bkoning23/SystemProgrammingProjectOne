@@ -6,25 +6,25 @@
 void readFreq(float given[], char fname[]);
 void calcFreq(float found[], char fname[]);
 char rotate(char ch, int num);
-
+int findKey(float given[], float found[]);
 
 int main(){
 
 	float given[LETTERCOUNT];
 	float found[LETTERCOUNT]= { 0 } ;
 	readFreq(given, "LetFreq.txt");
+	
 	for(int i = 0; i<LETTERCOUNT; i++)
 		printf("%lf\n", given[i]);
 
-	calcFreq(found, "test.txt");
+	calcFreq(found, "testparagraphenc.txt");
 
 	for(int i = 0; i<LETTERCOUNT; i++)
 		printf("%f\n", found[i]);	
 	
-	printf("%c\n", rotate('a', 4));
-	printf("%c\n", rotate('z', 4));
-	printf("%c\n", rotate('q', 4));
-	printf("%c\n", rotate('m', 4));
+	int key = findKey(given, found);	
+
+	printf("Key is: %d", key);
 	return(0);
 }
 
@@ -74,4 +74,40 @@ char rotate(char ch, int num){
 	if((ch+num)-97 > 26)
 		return ((ch+num)-26);
 	return ch+num;
+}
+
+//Compare the data in array found with thre frequency data in array given, looking 
+//for a key that will give you the best match. To do this, try each of teh 26 rotations,
+//and remember which gives the smallest difference between the frequencies you 
+//observed and teh frequencies given. Return the key.
+int findKey(float given[], float found[]){
+
+	int key = 0;
+	float differenceTotal = 0;
+	float lowestDifferenceTotal = 1000;
+	for(int i = 0; i<LETTERCOUNT; i++){
+		for(int j = 0; j<LETTERCOUNT; j++){
+			int foundIndex = j+i;
+			if(foundIndex >= 26)
+				foundIndex = foundIndex - 26;
+			float temp = given[j] - found[foundIndex];
+			temp = temp * temp;
+			differenceTotal = differenceTotal + temp;
+		}
+		if(differenceTotal < lowestDifferenceTotal){
+			lowestDifferenceTotal = differenceTotal;
+			key = i;
+		}
+		
+		differenceTotal = 0;
+	}
+	return key;
+}
+
+void decrypt(int key, char fname[]){
+
+		
+
+
+
 }
