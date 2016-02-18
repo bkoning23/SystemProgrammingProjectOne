@@ -1,7 +1,11 @@
+//Project:	Caesar Cipher Decrypter
+//Author: 	Brendan Koning
+
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-
+#include <stdlib.h>
 #define LETTERCOUNT 26
 
 void readFreq(float given[], char fname[]);
@@ -10,25 +14,27 @@ char rotate(char ch, int num);
 int findKey(float given[], float found[]);
 void decrypt(int key, char fname[]);
 
-int main(){
+int main(int argc, char* argv[]){
+
+
+	if(argc != 2){
+		printf("Usage: decryptciper infile\n");
+		printf("Output file is decryptfile.txt\n");
+		exit(1);
+	}
+
 
 	float given[LETTERCOUNT];
 	float found[LETTERCOUNT]= { 0 } ;
 	readFreq(given, "LetFreq.txt");
 	
-	for(int i = 0; i<LETTERCOUNT; i++)
-		printf("%lf\n", given[i]);
+	calcFreq(found, argv[1]);
 
-	calcFreq(found, "pagecrypt.txt");
-
-	for(int i = 0; i<LETTERCOUNT; i++)
-		printf("%f\n", found[i]);	
 	
 	int key = findKey(given, found);	
 
-	printf("Key is: %d\n", key);
 
-	decrypt(key, "pagecrypt.txt");
+	decrypt(key, argv[1]);
 
 	return(0);
 }
@@ -117,7 +123,7 @@ void decrypt(int key, char fname[]){
 
 	FILE* efp, *dfp;		
 	efp = fopen(fname, "r");
-	dfp = fopen("decrpytfile", "w");
+	dfp = fopen("decryptfile.txt", "w");
 	char current = fgetc(efp);
 	while(current!=EOF){
 		if(isalpha(current)){
