@@ -74,8 +74,11 @@ void calcFreq(float found[], char fname[]){
 //positions as given in parameter num and return the resulting character.
 char rotate(char ch, int num){
 
+	int max = 122;
+	if(isupper(ch))
+		max = 90;
 	int temp = (int)ch;
-	if((temp+num) > 122)
+	if((temp+num) > max)
 		return (char)((temp+num) - 26);
 	return (char)(temp+num);
 
@@ -118,7 +121,6 @@ void decrypt(int key, char fname[]){
 	char current = fgetc(efp);
 	while(current!=EOF){
 		if(isalpha(current)){
-			current = tolower(current);
 			current = rotate(current, 26-key);
 		}
 		fputc(current, dfp);
