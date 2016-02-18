@@ -5,6 +5,8 @@
 
 void readFreq(float given[], char fname[]);
 void calcFreq(float found[], char fname[]);
+char rotate(char ch, int num);
+
 
 int main(){
 
@@ -18,6 +20,11 @@ int main(){
 
 	for(int i = 0; i<LETTERCOUNT; i++)
 		printf("%f\n", found[i]);	
+	
+	printf("%c\n", rotate('a', 4));
+	printf("%c\n", rotate('z', 4));
+	printf("%c\n", rotate('q', 4));
+	printf("%c\n", rotate('m', 4));
 	return(0);
 }
 
@@ -58,4 +65,13 @@ void calcFreq(float found[], char fname[]){
 		found[i] = found[i] / total;
 	}	
 	
+}
+
+//Rotate the character in paramtere ch down the alphabet for the number of
+//positions as given in parameter num and return the resulting character.
+char rotate(char ch, int num){
+
+	if((ch+num)-97 > 26)
+		return ((ch+num)-26);
+	return ch+num;
 }
